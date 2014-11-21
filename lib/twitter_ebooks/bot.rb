@@ -75,6 +75,10 @@ module Ebooks
         log "Online!"
       end
 
+      @stream.on_event(:delete) do |event|
+        log "Delete detected from #{event[:source][:screen_name]}"
+      end
+
       @stream.on_event(:follow) do |event|
         next if event[:source][:screen_name] == @username
         log "Followed by #{event[:source][:screen_name]}"
