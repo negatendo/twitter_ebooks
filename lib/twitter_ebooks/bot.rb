@@ -49,7 +49,7 @@ module Ebooks
         config.oauth_token_secret = @oauth_token_secret
       end
 
-      needs_stream = [@on_follow, @on_message, @on_mention, @on_timeline].any? {|e| !e.nil?}
+      needs_stream = [@on_follow, @on_message, @on_mention, @on_timeline, @on_delete].any? {|e| !e.nil?}
 
       @twitter = Twitter::Client.new
       @stream = TweetStream::Client.new if needs_stream
@@ -168,5 +168,6 @@ module Ebooks
     def on_mention(&b); @on_mention = b; end
     def on_timeline(&b); @on_timeline = b; end
     def on_message(&b); @on_message = b; end
+    def on_delete(&b); @on_delete = b; end
   end
 end
