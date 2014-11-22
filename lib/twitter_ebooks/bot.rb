@@ -75,10 +75,6 @@ module Ebooks
         log "Online!"
       end
 
-      @stream.on_event(:delete) do |event|
-        log "Delete detected from #{event[:source][:screen_name]}"
-      end
-
       @stream.on_event(:follow) do |event|
         next if event[:source][:screen_name] == @username
         log "Followed by #{event[:source][:screen_name]}"
@@ -90,6 +86,10 @@ module Ebooks
         log "DM from @#{dm[:sender][:screen_name]}: #{dm[:text]}"
         @on_message.call(dm) if @on_message
       end
+ 
+      @stream.on_delete do |status_id, user_id|
+        @on_delete.call(status_id, user_id) if @on_delete
+      end 
 
       @stream.userstream do |ev|
         next unless ev[:text] # If it's not a text-containing tweet, ignore it
@@ -128,6 +128,7 @@ module Ebooks
           @on_timeline.call(ev, meta) if @on_timeline
         end
       end
+
     end
 
     # Wrapper for EM.add_timer
